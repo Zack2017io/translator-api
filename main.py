@@ -21,6 +21,9 @@ def translate_text(request: TranslationRequest):
 
     # Make prediction with your model
     # 👇 Replace this line with your model's actual prediction method
-    output = model.translate(input_text)  # You may need to adapt this
+    from utils import tokenizer  # Make sure you have a tokenizer object in utils.py
+    input_ids = tokenizer.encode(input_text, return_tensors="pt")
+    output_tokens = model.generate(input_ids, num_beams=10, num_return_sequences=1)
+    output = tokenizer.decode(output_tokens[0], skip_special_tokens=True)
 
     return {"translation": output}
